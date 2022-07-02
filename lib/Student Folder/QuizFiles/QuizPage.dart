@@ -1,14 +1,18 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:group_radio_button/group_radio_button.dart';
+import 'package:provider/provider.dart';
 import 'package:quizapp/Student%20Folder/LandingPages/BottomNavigation.dart';
 import 'package:quizapp/Student%20Folder/LandingPages/StudentProfilePage.dart';
 import 'package:quizapp/Student%20Folder/QuizFiles/QuizQuestionCard.dart';
-
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:quizapp/Student%20Folder/Services/Databasemanager.dart';
 import 'ResultPage.dart';
 
 class Quizpage extends StatefulWidget {
@@ -68,10 +72,12 @@ class _QuizpageState extends State<Quizpage> {
     });
   }
 
+  int count = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        elevation: 10,
         title: Text(widget.ourquizName),
       ),
       body: Container(
@@ -82,21 +88,22 @@ class _QuizpageState extends State<Quizpage> {
             itemCount: widget.ourquestionList.length,
             itemBuilder: (context, index) {
               final question = widget.ourquestionList[index];
-              int count =0;
 
               return Container(
                 decoration: const BoxDecoration(
-                    color: Color.fromARGB(42, 150, 252, 167)),
+                    gradient: LinearGradient(
+                  colors: [Color.fromARGB(255, 117, 193, 159), Colors.blueGrey],
+                )),
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 20),
                 child: Column(children: <Widget>[
-                  Container(
-                      child: LinearProgressIndicator(
-                          backgroundColor:
-                              const Color.fromARGB(255, 108, 153, 175),
-                          valueColor: const AlwaysStoppedAnimation(
-                              Color.fromARGB(255, 36, 36, 91)),
-                          minHeight: 20,
-                          value: initial)),
+                  // Container(
+                  //     child: LinearProgressIndicator(
+                  //         backgroundColor:
+                  //             const Color.fromARGB(255, 108, 153, 175),
+                  //         valueColor: const AlwaysStoppedAnimation(
+                  //             Color.fromARGB(255, 36, 36, 91)),
+                  //         minHeight: 20,
+                  //         value: initial)),
                   Container(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
                     child: Center(
@@ -165,20 +172,20 @@ class _QuizpageState extends State<Quizpage> {
                         onPressed: () {
                           if (_value == question['Answer']) {
                             setState(() {
-                              count++;
+                              count = count + 1;
                             });
                             print("This is count:" + count.toString());
                           }
 
-                          if (index == widget.ourquestionList.length - 1) {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) =>
-                                        ResultPage(count: count)));
+                          // if (index == widget.ourquestionList.length - 1) {
+                          //   Navigator.push(
+                          //       context,
+                          //       MaterialPageRoute(
+                          //           builder: (context) =>
+                          //               ResultPage(count: count)));
 
-                            print("This is count:" + count.toString());
-                          }
+                          //   print("This is count:" + count.toString());
+                          // }
 
                           // update();
                           // setState(() {
@@ -186,12 +193,13 @@ class _QuizpageState extends State<Quizpage> {
                           // });
                         },
                         child: const Text(
-                          'submit',
+                          'Lock',
                           style: TextStyle(color: Colors.white),
                         )),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
+                        //PREV BUTTON
                         Container(
                           alignment: Alignment.center,
                           child: ElevatedButton(
@@ -209,6 +217,8 @@ class _QuizpageState extends State<Quizpage> {
                               },
                               child: const Text('Prev')),
                         ),
+
+                        //NEXT BUTTON
                         const SizedBox(width: 20),
                         ElevatedButton(
                             style: ElevatedButton.styleFrom(
@@ -222,6 +232,24 @@ class _QuizpageState extends State<Quizpage> {
                               _pageController.nextPage(
                                   duration: const Duration(milliseconds: 500),
                                   curve: Curves.easeIn);
+
+                              if (index == widget.ourquestionList.length - 1) {
+                                _showdialog(count);
+                                // Navigator.push(
+                                //     context,
+                                //     MaterialPageRoute(
+                                //         builder: (context) => ResultPage(
+                                //             Quizname: widget.ourquizName,
+                                //             count: count)));
+
+                                final userdata =
+                                    FirebaseAuth.instance.currentUser!;
+                                DatabaseManager().quizmarks(
+                                    widget.ourquizName, count, userdata.uid);
+                                print("This is quiz marks" + DatabaseManager()
+                                    .fetchquizmarks(widget.ourquizName).toString());
+                                print("This is count:" + count.toString());
+                              }
                             },
                             child: const Text('Next'))
                       ],
@@ -229,25 +257,25 @@ class _QuizpageState extends State<Quizpage> {
                   ])),
                 ]),
               );
-
-              // QuizQuestionCard(
-              //     quizname: widget.ourquizName.toString(),
-              //     question:
-              //         widget.ourquestionList[index]['Question'].toString(),
-              //     option1:
-              //         widget.ourquestionList[index]['Option 1'].toString(),
-              //     option2:
-              //         widget.ourquestionList[index]['Option 2'].toString(),
-              //     option3:
-              //         widget.ourquestionList[index]['Option 3'].toString(),
-              //     option4:
-              //         widget.ourquestionList[index]['Option 4'].toString(),
-              //     index: index,
-              //     controller: _pageController);
             }),
       ),
     );
   }
+
+  // QuizQuestionCard(
+  //     quizname: widget.ourquizName.toString(),
+  //     question:
+  //         widget.ourquestionList[index]['Question'].toString(),
+  //     option1:
+  //         widget.ourquestionList[index]['Option 1'].toString(),
+  //     option2:
+  //         widget.ourquestionList[index]['Option 2'].toString(),
+  //     option3:
+  //         widget.ourquestionList[index]['Option 3'].toString(),
+  //     option4:
+  //         widget.ourquestionList[index]['Option 4'].toString(),
+  //     index: index,
+  //     controller: _pageController);
 
   // Widget timerwidget() {
   //   double intial = 0;
@@ -264,4 +292,24 @@ class _QuizpageState extends State<Quizpage> {
   //       minHeight: 20,
   //       value: initial);
   // }
+  void _showdialog(int count) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            // insetAnimationCurve: ,
+            title: Text(
+                'Your current marks is $count/${widget.ourquestionList.length}'),
+            content: Text('Click for more info'),
+            actions: [
+              MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Back'),
+              )
+            ],
+          );
+        });
+  }
 }

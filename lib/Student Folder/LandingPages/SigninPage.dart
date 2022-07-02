@@ -97,8 +97,8 @@ class _SignInPageState extends State<SignInPage> {
                           password: passwordController.text))
                       .user;
                   print("---> User signed in");
-                  // ignore: use_build_context_synchronously
-                  sharedpref();
+                 
+                  // sharedpref();
 
                   Navigator.push(
                       context,

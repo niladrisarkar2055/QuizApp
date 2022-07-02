@@ -18,7 +18,7 @@ class _OldQuizForStudentsState extends State<OldQuizForStudents> {
   getOldQuizList() async {
     List results = await DatabaseManager().getQuizList();
     print('This is quizz List');
-    print(results);
+    // print(results);
 
     for (int i = 0; i < results.length; i++) {
       Timestamp quizDateTime =

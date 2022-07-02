@@ -9,7 +9,7 @@ import 'package:quizapp/Student%20Folder/Services/Databasemanager.dart';
 
 class QuizcardStudentSide extends StatefulWidget {
   List<dynamic> questionList;
-  String? quizName;
+  String quizName;
   String? quizSubject;
   Timestamp dateTime;
   String? batch;
@@ -28,7 +28,26 @@ class _QuizcardStudentSideState extends State<QuizcardStudentSide> {
   DatabaseManager databaseManager = new DatabaseManager();
 
   //onclick a chatroom is created and user is taken to the messagebox is inside
-
+  void _showdialog(int count) {
+    showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            // insetAnimationCurve: ,
+            title: Text(
+                'Your marks is $count'),
+            content: Text('Click for more info'),
+            actions: [
+              MaterialButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text('Back'),
+              )
+            ],
+          );
+        });
+  }
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -37,24 +56,32 @@ class _QuizcardStudentSideState extends State<QuizcardStudentSide> {
         borderRadius: BorderRadius.circular(10),
       ),
       child: GestureDetector(
-        onTap: () {
-          
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                builder: (context) => Quizpage(
-                  ourquestionList: widget.questionList,
-                  ourquizName: widget.quizName!,
-                  ourquizSubject: widget.quizSubject,
-                  ourdateTime: widget.dateTime,
-                  ourbatch: widget.batch,
-                ),
-              ));
-          print('This is questions --->  ');
-          print(widget.questionList);
-          print(widget.quizName);
-          print(widget.quizSubject);
+        onTap: () async{
+          int marks = await DatabaseManager().fetchquizmarks(widget.quizName) ;
+          if (marks >=0) {
+            _showdialog(marks);
+          } 
+        
+          else {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => Quizpage(
+                    ourquestionList: widget.questionList,
+                    ourquizName: widget.quizName!,
+                    ourquizSubject: widget.quizSubject,
+                    ourdateTime: widget.dateTime,
+                    ourbatch: widget.batch,
+                  ),
+                ));
+          }
+          // print('This is questions --->  ');
+          // print(widget.questionList);
+          // print(widget.quizName);
+          // print(widget.quizSubject);
+        // }
         },
+       
         child: Container(
           padding:
               const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseManager {
   final CollectionReference userlist =
@@ -41,10 +42,8 @@ class DatabaseManager {
   }
 
   Future<dynamic> getUserRole(String email) async {
-    dynamic results = await userlist
-        .where("Email", isEqualTo: email)
-        .get()
-        .catchError((e) {
+    dynamic results =
+        await userlist.where("Email", isEqualTo: email).get().catchError((e) {
       print(e.toString());
     });
 
@@ -107,5 +106,32 @@ class DatabaseManager {
       });
     }
     return quizList;
+  }
+
+  //FOR QUIZ MARKS
+  Future<void> quizmarks(String quizname, int count, String uid) async {
+    Map<String, dynamic> map = {'marks': count};
+    await studentList
+        .doc(uid)
+        .collection('AttemptedQuizes')
+        .doc(quizname)
+        .set(map);
+  }
+
+  Future<int> fetchquizmarks(String quizname) async {
+    final userdata = FirebaseAuth.instance.currentUser!;
+    String uid = userdata.uid;
+
+    int mymarks = 0;
+    await studentList
+        .doc(uid)
+        .collection('AttemptedQuizes')
+        .doc(quizname)
+        .get()
+        .then((ds) => {if(ds.data()!['marks']!=null){
+          mymarks=ds.data() as dynamic , ['marks']
+        }});
+    print("MY MARKS FOR THE QUIZ " + quizname + " is " + mymarks.toString());
+    return mymarks;
   }
 }

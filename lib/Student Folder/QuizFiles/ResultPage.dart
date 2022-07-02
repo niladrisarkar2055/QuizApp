@@ -5,15 +5,14 @@ import 'package:flutter/src/widgets/framework.dart';
 
 class ResultPage extends StatefulWidget {
   int count;
-  ResultPage({required this.count});
+  String Quizname;
+  ResultPage({required this.count, required this.Quizname});
 
   @override
   State<ResultPage> createState() => _ResultPageState();
 }
 
 class _ResultPageState extends State<ResultPage> {
-  
-  
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -22,10 +21,9 @@ class _ResultPageState extends State<ResultPage> {
         child: ListTile(
           tileColor: Colors.amber,
           title: Text(widget.count.toString()),
-          subtitle:const  Text('Your marks'),
+          subtitle:  Text('Your marks in: '+ widget.Quizname),
         ),
       ),
     );
   }
 }
-

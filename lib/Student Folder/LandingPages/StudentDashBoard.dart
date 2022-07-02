@@ -6,6 +6,7 @@ import 'package:quizapp/Student Folder/LandingPages/SignInPage.dart';
 import 'package:quizapp/Student Folder/Services/AuthServices.dart';
 import 'package:quizapp/Student%20Folder/QuizFiles/NewQuizForStudents.dart';
 import 'package:quizapp/Student%20Folder/QuizFiles/OldQuizForStudents.dart';
+import 'package:quizapp/StudentorTeacherPage.dart';
 
 
 class StudentDashBoard extends StatefulWidget {
@@ -34,6 +35,7 @@ class _StudentDashBoardState extends State<StudentDashBoard> {
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+            elevation: 10,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -47,20 +49,27 @@ class _StudentDashBoardState extends State<StudentDashBoard> {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const SignInPage()));
+                              builder: (context) => const Verification()));
                     }),
                     child: const Text('Log out'))
               ],
             ),
             centerTitle: true,
             bottom: TabBar(
-              tabs: [Tab(text: "Old", icon: Icon(Icons.time_to_leave),),Tab(text: "New", icon: Icon(Icons.add),), ],
+              tabs: [Tab(text: "Old", icon: Icon(Icons.face_unlock_rounded),),Tab(text: "New", icon: Icon(Icons.new_label),), ],
               
             ),
           ),
           
-          body: TabBarView(
-            children: [OldQuizForStudents(), NewQuizesForStudents()],
+          body: Container(
+            decoration: const BoxDecoration(
+                     gradient: LinearGradient(colors: [
+                      Color.fromARGB(194, 95, 166, 85),Color.fromARGB(104, 42, 150, 65)
+                      
+                    ],)),
+            child: TabBarView(
+              children: [OldQuizForStudents(), NewQuizesForStudents()],
+            ),
           )
           ),
     );

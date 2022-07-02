@@ -52,7 +52,7 @@ class _AuthanticationWrapperState extends State<AuthanticationWrapper> {
   dynamic userinfo;
   Future<dynamic> CheckRole() async {
     String role = '';
-    final userdata = FirebaseAuth.instance.currentUser!;
+    final userdata = FirebaseAuth.instance.currentUser;
     if (userdata != null) {
       await FirebaseFirestore.instance
           .collection("Users")

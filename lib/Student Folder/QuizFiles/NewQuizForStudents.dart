@@ -19,7 +19,7 @@ class _NewQuizesForStudentsState extends State<NewQuizesForStudents> {
   getnewQuizList() async {
     List results = await DatabaseManager().getQuizList();
     print('This is quizz List');
-    print(results);
+    // print(results);
 
     for (int i = 0; i < results.length; i++) {
       Timestamp quizDateTime =
