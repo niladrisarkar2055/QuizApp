@@ -43,7 +43,7 @@ class _StudentDashBoardState extends State<StudentDashBoard> {
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Colors.blueGrey)),
+                            MaterialStateProperty.all(Color.fromARGB(222, 54, 133, 50))),
                     onPressed: (() {
                       context.read<AuthService>().signOut();
                       Navigator.push(
@@ -64,7 +64,7 @@ class _StudentDashBoardState extends State<StudentDashBoard> {
           body: Container(
             decoration: const BoxDecoration(
                      gradient: LinearGradient(colors: [
-                      Color.fromARGB(194, 95, 166, 85),Color.fromARGB(104, 42, 150, 65)
+                      Color.fromARGB(195, 120, 205, 235),Color.fromARGB(192, 10, 126, 123)
                       
                     ],)),
             child: TabBarView(

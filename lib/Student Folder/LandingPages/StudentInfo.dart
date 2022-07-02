@@ -69,7 +69,7 @@ class _StudentinfoState extends State<Studentinfo> {
                 width: MediaQuery.of(context).size.width * 1.2,
                 child: TextField(
                   controller: numberController,
-                  obscureText: true,
+                  obscureText: false,
                   decoration: const InputDecoration(
                       border: OutlineInputBorder(),
                       labelText: 'Phone No.',

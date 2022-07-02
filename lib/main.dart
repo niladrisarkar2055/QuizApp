@@ -102,7 +102,7 @@ class _AuthanticationWrapperState extends State<AuthanticationWrapper> {
     if (appuser != null) {
       if (userinfo == 'Student') {
         return StudentMain();
-      } else {
+      } else{
         return TeacherMain();
       }
     } else {

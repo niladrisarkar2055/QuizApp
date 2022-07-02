@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:quizapp/StudentorTeacherPage.dart';
 import 'package:quizapp/Teacher%20Folder/LandingPages/Teacher_SignInPage.dart';
 import 'package:quizapp/Teacher%20Folder/Services/AuthtenticationServices.dart';
+import 'package:quizapp/main.dart';
 
 import '../Quizes/newQuizes.dart';
 import '../Quizes/oldQuizes.dart';
@@ -43,12 +44,12 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                     style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.blueGrey)),
-                    onPressed: (() {
+                    onPressed: (() async {
                       context.read<AuthService>().signOut();
-                      Navigator.push(
+                      await Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const Verification()));
+                              builder: (context) => const MyApp()));
                     }),
                     child: const Text('Log out'))
               ],

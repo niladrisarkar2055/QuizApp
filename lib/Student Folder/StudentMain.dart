@@ -4,10 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:provider/provider.dart';
+import 'package:quizapp/Student%20Folder/LandingPages/BottomNavigation.dart';
 
 import 'package:quizapp/Student%20Folder/LandingPages/SigninPage.dart';
+import 'package:quizapp/Student%20Folder/LandingPages/StudentDashBoard.dart';
 import 'package:quizapp/Student%20Folder/LandingPages/StudentInfo.dart';
 import 'package:quizapp/Student%20Folder/Services/AuthServices.dart';
+import 'package:quizapp/Student%20Folder/Services/Databasemanager.dart';
 
 class StudentMain extends StatefulWidget {
   StudentMain();
@@ -49,6 +52,13 @@ class AuthanticationWrapper extends StatefulWidget {
 }
 
 class _AuthanticationWrapperState extends State<AuthanticationWrapper> {
+  DatabaseManager databaseManager = DatabaseManager();
+  Future<int> check() async {
+    int num = await databaseManager.fetch_name_and_phnno();
+    print("This is num:" + num.toString());
+    return num;
+  }
+
   dynamic userinfo;
   Future<dynamic> CheckRole() async {
     String role = '';
@@ -72,6 +82,7 @@ class _AuthanticationWrapperState extends State<AuthanticationWrapper> {
 
   @override
   void initState() {
+    check();
     CheckRole();
     super.initState();
   }
@@ -79,10 +90,14 @@ class _AuthanticationWrapperState extends State<AuthanticationWrapper> {
   @override
   Widget build(BuildContext context) {
     final appuser = context.watch<User?>();
-
+    Future<int> sum = check() as Future<int>;
     if (appuser != null) {
       if (userinfo == "Student") {
-        return Studentinfo(email: appuser.email!, uID: appuser.uid);
+        if (sum == 2) {
+          return StudentDashBoard();
+        } else {
+          return Studentinfo(email: appuser.email!, uID: appuser.uid);
+        }
       } else {
         return SignInPage();
       }

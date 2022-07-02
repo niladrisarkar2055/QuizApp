@@ -10,7 +10,6 @@ import 'package:quizapp/Teacher%20Folder/LandingPages/TeacherinfoPage.dart';
 import 'package:quizapp/Teacher%20Folder/Services/AuthtenticationServices.dart';
 
 class TeacherMain extends StatefulWidget {
-  
   TeacherMain();
 
   @override
@@ -60,10 +59,12 @@ class _AuthanticationWrapperState extends State<AuthanticationWrapper> {
           .doc(userdata.email)
           .get()
           .then((ds) {
-        setState(() {
-          role = ds.data()!['role'];
-          userinfo = role;
-        });
+        if (mounted) {
+          setState(() {
+            role = ds.data()!['role'];
+            userinfo = role;
+          });
+        }
         print('this is:' + role);
       });
     }
@@ -72,8 +73,8 @@ class _AuthanticationWrapperState extends State<AuthanticationWrapper> {
   }
 
   @override
-  void initState(){
-     CheckRole();
+  void initState() {
+    CheckRole();
     super.initState();
   }
 

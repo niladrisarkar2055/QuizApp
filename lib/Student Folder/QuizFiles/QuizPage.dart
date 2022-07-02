@@ -173,24 +173,12 @@ class _QuizpageState extends State<Quizpage> {
                           if (_value == question['Answer']) {
                             setState(() {
                               count = count + 1;
+
                             });
                             print("This is count:" + count.toString());
                           }
-
-                          // if (index == widget.ourquestionList.length - 1) {
-                          //   Navigator.push(
-                          //       context,
-                          //       MaterialPageRoute(
-                          //           builder: (context) =>
-                          //               ResultPage(count: count)));
-
-                          //   print("This is count:" + count.toString());
-                          // }
-
-                          // update();
-                          // setState(() {
-                          //   initial = 0.0;
-                          // });
+                          
+                         
                         },
                         child: const Text(
                           'Lock',
@@ -233,7 +221,7 @@ class _QuizpageState extends State<Quizpage> {
                                   duration: const Duration(milliseconds: 500),
                                   curve: Curves.easeIn);
 
-                              if (index == widget.ourquestionList.length - 1) {
+                              if ((index == widget.ourquestionList.length - 1) && (count<=widget.ourquestionList.length)) {
                                 _showdialog(count);
                                 // Navigator.push(
                                 //     context,
@@ -249,6 +237,8 @@ class _QuizpageState extends State<Quizpage> {
                                 print("This is quiz marks" + DatabaseManager()
                                     .fetchquizmarks(widget.ourquizName).toString());
                                 print("This is count:" + count.toString());
+
+                                Navigator.of(context).pop();
                               }
                             },
                             child: const Text('Next'))

@@ -22,6 +22,7 @@ class _SignInPageState extends State<SignInPage> {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
+  DatabaseManager databaseManager = DatabaseManager();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,17 +98,24 @@ class _SignInPageState extends State<SignInPage> {
                           password: passwordController.text))
                       .user;
                   print("---> User signed in");
-                 
-                  // sharedpref();
 
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => Studentinfo(
-                              email: emailController.text.trim(),
-                              uID: user!.uid
-                             )));
-                 
+                  // sharedpref();
+                  int num = await databaseManager.fetch_name_and_phnno();
+                  if (num == 2) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const BottomNavigation()));
+                  } else if (num != 2) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => Studentinfo(
+                                email: emailController.text.trim(),
+                                uID: user!.uid)));
+                  }
                 },
                 child: const Text(
                   'Login',
@@ -163,37 +171,30 @@ class _SignInPageState extends State<SignInPage> {
     }
   }
 
-  Future<void> sharedpref()  async {
-  String myEmail = '';
-  String myName = '';
-  String myUid = '';
-  String myPhone = '';
-  final userdata = FirebaseAuth.instance.currentUser!;
+  Future<void> sharedpref() async {
+    String myEmail = '';
+    String myName = '';
+    String myUid = '';
+    String myPhone = '';
+    final userdata = FirebaseAuth.instance.currentUser!;
     if (userdata != null) {
-     await FirebaseFirestore.instance
+      await FirebaseFirestore.instance
           .collection("Students")
           .doc(userdata.uid)
           .get()
           .then((ds) {
-            setState(() {
-              
-            
-        myEmail = ds.data()!['Email'];
-        myName = ds.data()!['name'];
-        myUid = ds.data()!['uID'];
-        myPhone = ds.data()!['number'];
+        setState(() {
+          myEmail = ds.data()!['Email'];
+          myName = ds.data()!['name'];
+          myUid = ds.data()!['uID'];
+          myPhone = ds.data()!['number'];
         });
-        print('this is:'+ myName);
+        print('this is:' + myName);
       });
     }
 
-
-      HelperFunctions.saveUserLoggedInSharedPreference(true);
-                  HelperFunctions.saveUserEmailSharedPreference(
-                      myEmail);
-                  HelperFunctions.saveUserNameSharedPreference(
-                      myName);
-
-
+    HelperFunctions.saveUserLoggedInSharedPreference(true);
+    HelperFunctions.saveUserEmailSharedPreference(myEmail);
+    HelperFunctions.saveUserNameSharedPreference(myName);
   }
 }

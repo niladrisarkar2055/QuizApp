@@ -2,10 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:quizapp/Teacher%20Folder/HelperFunction_Teacher/sharedpreference.dart';
+import 'package:quizapp/Teacher%20Folder/LandingPages/TeacherHomePage.dart';
 import 'package:quizapp/Teacher%20Folder/LandingPages/TeacherinfoPage.dart';
 import 'package:quizapp/Teacher%20Folder/Services/AuthtenticationServices.dart';
 
 import 'package:provider/provider.dart';
+import 'package:quizapp/Teacher%20Folder/Services/Teacher_DatabaseManager.dart';
 
 class SignInPage extends StatefulWidget {
   const SignInPage({Key? key}) : super(key: key);
@@ -15,7 +17,6 @@ class SignInPage extends StatefulWidget {
 }
 
 class _SignInPageState extends State<SignInPage> {
-   
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController nameController = TextEditingController();
@@ -86,19 +87,36 @@ class _SignInPageState extends State<SignInPage> {
                   context.read<AuthService>().signIn(
                       email: emailController.text.trim(),
                       password: passwordController.text.trim());
-                  // final FirebaseAuth _auth = FirebaseAuth.instance;
-                  // final User? user = (await _auth.signInWithEmailAndPassword(
-                  //         email: emailController.text,
-                  //         password: passwordController.text))
-                  //     .user;
-                  sharedpref();
-
-                  //  Navigator.push(
-                  //     context,
-                  //     MaterialPageRoute(
-                  //         builder: (context) => TeacherInfo(
-                  //          email: emailController.text.trim(),
-                  //             uID: user!.uid)));
+                  final FirebaseAuth _auth = FirebaseAuth.instance;
+                  final User? user = (await _auth.signInWithEmailAndPassword(
+                          email: emailController.text,
+                          password: passwordController.text))
+                      .user;
+                  // sharedpref();
+                  int num =
+                      await DatabaseManager().Teacher_fetch_name_and_phnno();
+                  print("this is status of teacher:"+ num.toString());
+                  if (await DatabaseManager().Teacher_fetch_name_and_phnno()==3) {
+                    // ignore: use_build_context_synchronously
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TeacherHomePage(
+                                  teacherEmail: emailController.toString(),
+                                )));
+                  } 
+                  
+                  else if (await DatabaseManager()
+                          .Teacher_fetch_name_and_phnno() !=
+                      3) {
+                    // ignore: use_build_context_synchronously
+                    await Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => TeacherInfo(
+                                email: emailController.text.trim(),
+                                uID: user!.uid)));
+                  }
                 },
                 child: const Text(
                   'Login',

@@ -109,16 +109,16 @@ class _TeacherInfoState extends State<TeacherInfo> {
                   },
                   child: const Text('Save')),
 
-                  ElevatedButton(
-                  onPressed: () async {
+                  // ElevatedButton(
+                  // onPressed: () async {
                     
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                Verification()));
-                  },
-                  child: const Text('Go to'))
+                  //   Navigator.pushReplacement(
+                  //       context,
+                  //       MaterialPageRoute(
+                  //           builder: (context) =>
+                  //               Verification()));
+                  // },
+                  // child: const Text('Go to'))
 
             ]),
           ),

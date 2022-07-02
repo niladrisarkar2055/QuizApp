@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class DatabaseManager {
   final CollectionReference userlist =
@@ -16,20 +17,18 @@ class DatabaseManager {
   final CollectionReference batches =
       FirebaseFirestore.instance.collection('Batches');
 
-  Future<void> createTeacher(
-      String email, String name,String uId, String number, String subject) async {
+  Future<void> createTeacher(String email, String name, String uId,
+      String number, String subject) async {
     Map<String, dynamic> map = {
       'Email': email,
-      'Name':name,
+      'Name': name,
       'uID': uId,
       'Number': number,
       'Subject': subject,
-      'role':"Teacher"
+      'role': "Teacher"
     };
     return await teacherList.doc(email).set(map);
   }
-
-
 
   Future<dynamic> fetchTeacherinfo(String email) async {
     final user = await teacherList
@@ -54,7 +53,7 @@ class DatabaseManager {
   //       .set({'Batch Name': batchName, 'Students': studentEmailList});
   // }
 
-  Future<void> createTUser(String email, String role) async{
+  Future<void> createTUser(String email, String role) async {
     Map<String, dynamic> map = {'Email': email, 'role': role};
     return await userlist.doc(email).set(map);
   }
@@ -196,5 +195,28 @@ class DatabaseManager {
       });
     });
     return chemistryquestions;
+  }
+
+  Future<int> Teacher_fetch_name_and_phnno() async {
+    int name = -1;
+    int phnno = -1;
+    int subject = -1;
+    final userdata = FirebaseAuth.instance.currentUser!;
+    if (userdata != null) {
+      await FirebaseFirestore.instance
+          .collection("Teachers")
+          .doc(userdata.uid)
+          .get()
+          .then((ds) => {
+                if (ds.exists)
+                  {
+                    if (ds.data()!['Name'] != "") {name = 1},
+                    if (ds.data()!['Number'] != "") {phnno = 1},
+                    if (ds.data()!['Subject'] != "") {subject= 1},
+                  }
+              });
+    }
+
+    return (name + phnno + subject);
   }
 }

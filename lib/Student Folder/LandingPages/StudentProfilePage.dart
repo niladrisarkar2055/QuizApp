@@ -78,8 +78,8 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
         )),
         body: Container(
            decoration: const BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      Color.fromARGB(194, 95, 166, 85),Color.fromARGB(104, 42, 150, 65)
+                   gradient: LinearGradient(colors: [
+                      Color.fromARGB(195, 120, 205, 235),Color.fromARGB(192, 10, 126, 123)
                       
                     ],)
                     ),

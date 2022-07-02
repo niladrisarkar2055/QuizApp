@@ -122,16 +122,44 @@ class DatabaseManager {
     final userdata = FirebaseAuth.instance.currentUser!;
     String uid = userdata.uid;
 
-    int mymarks = 0;
+    int mymarks = -1;
     await studentList
         .doc(uid)
         .collection('AttemptedQuizes')
         .doc(quizname)
         .get()
-        .then((ds) => {if(ds.data()!['marks']!=null){
-          mymarks=ds.data() as dynamic , ['marks']
-        }});
+        .then((ds) => {
+              if (ds.exists)
+                {
+                  if (ds.data()!['marks'] > -1) {mymarks = ds.data()!['marks']}
+                }
+            });
     print("MY MARKS FOR THE QUIZ " + quizname + " is " + mymarks.toString());
     return mymarks;
+  }
+
+  // ignore: non_constant_identifier_names
+  Future<int> fetch_name_and_phnno() async {
+    int name=-1;
+    int phnno=-1;
+   
+    final userdata = FirebaseAuth.instance.currentUser!;
+    if (userdata != null) {
+      await FirebaseFirestore.instance
+          .collection("Students")
+          .doc(userdata.uid)
+          .get()
+          .then((ds) => {
+                if (ds.exists)
+                  {
+                    if (ds.data()!['name'] != "") {name = 1},
+                    if (ds.data()!['number'] != "") { phnno= 1},
+                    
+                  }
+                
+              });
+    }
+
+    return (name+phnno);
   }
 }

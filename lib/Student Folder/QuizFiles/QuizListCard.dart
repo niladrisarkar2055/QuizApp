@@ -9,7 +9,7 @@ import 'package:quizapp/Student%20Folder/Services/Databasemanager.dart';
 
 class QuizcardStudentSide extends StatefulWidget {
   List<dynamic> questionList;
-  String quizName;
+  String? quizName;
   String? quizSubject;
   Timestamp dateTime;
   String? batch;
@@ -32,10 +32,10 @@ class _QuizcardStudentSideState extends State<QuizcardStudentSide> {
     showDialog(
         context: context,
         builder: (context) {
-          return CupertinoAlertDialog(
+          return AlertDialog(
             // insetAnimationCurve: ,
-            title: Text(
-                'Your marks is $count'),
+            backgroundColor: Color.fromARGB(255, 114, 236, 240),
+            title: Text('Your marks is $count'),
             content: Text('Click for more info'),
             actions: [
               MaterialButton(
@@ -48,21 +48,27 @@ class _QuizcardStudentSideState extends State<QuizcardStudentSide> {
           );
         });
   }
+
+  bool attention = false;
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: Colors.greenAccent[100],
-        borderRadius: BorderRadius.circular(10),
+        gradient: LinearGradient(colors: [
+                      Color.fromARGB(194, 121, 160, 205),Color.fromARGB(222, 248, 173, 220)
+                      
+                    ],),
+        borderRadius: BorderRadius.circular(20),
       ),
       child: GestureDetector(
-        onTap: () async{
-          int marks = await DatabaseManager().fetchquizmarks(widget.quizName) ;
-          if (marks >=0) {
+        onTap: () async {
+          setState(() {
+            attention = !attention;
+          });
+          int marks = await DatabaseManager().fetchquizmarks(widget.quizName!);
+          if (marks >= 0) {
             _showdialog(marks);
-          } 
-        
-          else {
+          } else {
             Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -79,12 +85,11 @@ class _QuizcardStudentSideState extends State<QuizcardStudentSide> {
           // print(widget.questionList);
           // print(widget.quizName);
           // print(widget.quizSubject);
-        // }
+          // }
         },
-       
         child: Container(
           padding:
-              const EdgeInsets.only(left: 16, right: 16, top: 10, bottom: 10),
+              const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
           child: Row(
             children: <Widget>[
               Expanded(
@@ -105,7 +110,7 @@ class _QuizcardStudentSideState extends State<QuizcardStudentSide> {
                               widget.quizName!,
                               style: TextStyle(
                                   fontSize: 16,
-                                  color: Colors.grey.shade600,
+                                  color: Color.fromARGB(255, 255, 255, 255),
                                   fontWeight: FontWeight.bold),
                             ),
                             const SizedBox(
