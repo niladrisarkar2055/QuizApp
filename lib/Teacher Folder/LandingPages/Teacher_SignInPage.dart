@@ -89,34 +89,17 @@ class _SignInPageState extends State<SignInPage> {
                       password: passwordController.text.trim());
                   final FirebaseAuth _auth = FirebaseAuth.instance;
                   final User? user = (await _auth.signInWithEmailAndPassword(
-                          email: emailController.text,
-                          password: passwordController.text))
+                          email: emailController.text.trim(),
+                          password: passwordController.text.trim()))
                       .user;
-                  // sharedpref();
-                  int num =
-                      await DatabaseManager().Teacher_fetch_name_and_phnno();
-                  print("this is status of teacher:"+ num.toString());
-                  if (await DatabaseManager().Teacher_fetch_name_and_phnno()==3) {
-                    // ignore: use_build_context_synchronously
-                    await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TeacherHomePage(
-                                  teacherEmail: emailController.toString(),
-                                )));
-                  } 
-                  
-                  else if (await DatabaseManager()
-                          .Teacher_fetch_name_and_phnno() !=
-                      3) {
-                    // ignore: use_build_context_synchronously
-                    await Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => TeacherInfo(
-                                email: emailController.text.trim(),
-                                uID: user!.uid)));
-                  }
+
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => TeacherInfo(
+                              email: emailController.text.trim(),
+                              uID: user!.uid)));
+                  // await sharedpref();
                 },
                 child: const Text(
                   'Login',
@@ -139,7 +122,7 @@ class _SignInPageState extends State<SignInPage> {
     String myName = '';
     String myUid = '';
     String myPhone = '';
-    final userdata = FirebaseAuth.instance.currentUser!;
+    final userdata = FirebaseAuth.instance.currentUser;
     if (userdata != null) {
       await FirebaseFirestore.instance
           .collection("Teachers")
@@ -154,10 +137,10 @@ class _SignInPageState extends State<SignInPage> {
         });
         print('this is:' + myName);
       });
-    }
 
-    HelperFunctions.Teacher_saveUserLoggedInSharedPreference(true);
-    HelperFunctions.Teacher_saveUserEmailSharedPreference(myEmail);
-    HelperFunctions.Teacher_saveUserNameSharedPreference(myName);
+      // HelperFunctions.Teacher_saveUserLoggedInSharedPreference(true);
+      // HelperFunctions.Teacher_saveUserEmailSharedPreference(myEmail);
+      // HelperFunctions.Teacher_saveUserNameSharedPreference(myName);
+    }
   }
 }

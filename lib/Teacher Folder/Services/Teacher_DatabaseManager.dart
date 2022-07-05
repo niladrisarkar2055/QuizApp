@@ -14,8 +14,8 @@ class DatabaseManager {
       FirebaseFirestore.instance.collection('Chemistry');
   final CollectionReference quizzes =
       FirebaseFirestore.instance.collection('Quizzes');
-  final CollectionReference batches =
-      FirebaseFirestore.instance.collection('Batches');
+  final CollectionReference studentList =
+      FirebaseFirestore.instance.collection('Students');
 
   Future<void> createTeacher(String email, String name, String uId,
       String number, String subject) async {
@@ -30,6 +30,27 @@ class DatabaseManager {
     return await teacherList.doc(email).set(map);
   }
 
+  Future getAllMarks(String quizname) async {
+    List uIDList = [];
+    await studentList.get().then((value) => value.docs.forEach((element) {
+          dynamic data = (element.data()!);
+          uIDList.add(data['uID']);
+        }));
+    List studentEmail = [];
+    List marksList = [];
+    for (int i = 0; i < uIDList.length; i++) {
+      await studentList
+          .doc(uIDList[i])
+          .collection('AttemptedQuizes')
+          .get()
+          .then((value) {
+        value.docs.forEach((element) {
+          print(element.data());
+        });
+      });
+    }
+  }
+
   Future<dynamic> fetchTeacherinfo(String email) async {
     final user = await teacherList
         .where("userEmail", isEqualTo: email)
@@ -40,18 +61,6 @@ class DatabaseManager {
 
     return user;
   }
-  // Future<void> addBatch(String studentemail, String batchName) async {
-  //   List<dynamic> studentEmailList = [];
-
-  //   await batches.doc(batchName).get().then((value) {
-  //     studentEmailList = value['Students'];
-  //   });
-  //   studentEmailList.add(studentemail);
-
-  //   return await batches
-  //       .doc(batchName)
-  //       .set({'Batch Name': batchName, 'Students': studentEmailList});
-  // }
 
   Future<void> createTUser(String email, String role) async {
     Map<String, dynamic> map = {'Email': email, 'role': role};
@@ -73,12 +82,13 @@ class DatabaseManager {
   }
 
   Future<void> createQuiz(String quizName, String subject, String teacherEmail,
-      List<dynamic> questionList, DateTime dateTime) async {
+      List<dynamic> questionList, DateTime dateTime, String batch) async {
     Map<String, dynamic> infoMap = {
       'TeacherEmail': teacherEmail,
       'Subject': subject,
       'QuizName': quizName,
-      'Date & Time': dateTime
+      'Date & Time': dateTime,
+      'Batch': batch
     };
 
     await quizzes
@@ -155,7 +165,7 @@ class DatabaseManager {
               }));
       quizQuestionList.add(oneQuizQuestions);
     }
-    print(quizQuestionList);
+    // print(quizQuestionList);
     List<dynamic> quizList = [];
     for (int i = 0; i < quizNameList.length; i++) {
       quizList.add({
@@ -195,28 +205,5 @@ class DatabaseManager {
       });
     });
     return chemistryquestions;
-  }
-
-  Future<int> Teacher_fetch_name_and_phnno() async {
-    int name = -1;
-    int phnno = -1;
-    int subject = -1;
-    final userdata = FirebaseAuth.instance.currentUser!;
-    if (userdata != null) {
-      await FirebaseFirestore.instance
-          .collection("Teachers")
-          .doc(userdata.uid)
-          .get()
-          .then((ds) => {
-                if (ds.exists)
-                  {
-                    if (ds.data()!['Name'] != "") {name = 1},
-                    if (ds.data()!['Number'] != "") {phnno = 1},
-                    if (ds.data()!['Subject'] != "") {subject= 1},
-                  }
-              });
-    }
-
-    return (name + phnno + subject);
   }
 }

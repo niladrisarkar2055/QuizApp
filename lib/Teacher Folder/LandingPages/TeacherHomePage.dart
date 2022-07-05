@@ -44,12 +44,12 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                     style: ButtonStyle(
                         backgroundColor:
                             MaterialStateProperty.all(Colors.blueGrey)),
-                    onPressed: (() async {
+                    onPressed: (() {
                       context.read<AuthService>().signOut();
-                      await Navigator.push(
+                      Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => const MyApp()));
+                              builder: (context) => const Verification()));
                     }),
                     child: const Text('Log out'))
               ],

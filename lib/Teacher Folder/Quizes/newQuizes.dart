@@ -15,23 +15,26 @@ class NewQuizzes extends StatefulWidget {
 
 class _NewQuizzesState extends State<NewQuizzes> {
   List<dynamic> newQuizList = [];
+  bool isLoading = true;
 
   getnewQuizList() async {
     List results = await DatabaseManager().getQuizList();
-    print('This is quizz List');
-    print(results);
+    // print('This is quizz List');
+    // print(results);
 
     for (int i = 0; i < results.length; i++) {
       Timestamp quizDateTime =
           results[i]['QuizzInfo']['QuizzInfo']['Date & Time'];
       DateTime dateTime = DateTime.now();
       if ((dateTime.isBefore(quizDateTime.toDate()))) {
-        setState(() {
-          newQuizList.add(results[i]);
-        });
+        if (mounted) {
+          setState(() {
+            newQuizList.add(results[i]);
+          });
+        }
       }
     }
-
+    isLoading = false;
     return newQuizList;
   }
 
@@ -40,45 +43,48 @@ class _NewQuizzesState extends State<NewQuizzes> {
     // TODO: implement initState
     super.initState();
     getnewQuizList();
+    DatabaseManager().getAllMarks("quizname");
   }
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          ListView.builder(
-            itemCount: newQuizList.length,
-            scrollDirection: Axis.vertical,
-            shrinkWrap: true,
-            padding: EdgeInsets.only(top: 16),
-            itemBuilder: (context, index) {
-              return QuizListCard(
-                  batch: 'IIT - JEE',
-                  dateTime: newQuizList[index]['QuizzInfo']['QuizzInfo']
-                      ['Date & Time'],
-                  questionList: newQuizList[index]['QuizzQuestions'],
-                  quizName: 
-                  newQuizList[index]['QuizName']['QuizName'],
-
-                  quizSubject: newQuizList[index]['QuizzInfo']['Subject'],
-                  teacherEmail: newQuizList[index]['QuizzInfo']['TeacherEmail']
-                  );
-            },
-          ),
-          FloatingActionButton(
-            onPressed: () {
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => SelectSubject(
-                          teacherEmail: context.watch<User?>()!.email!)));
-            },
-            child: const Icon(Icons.add),
-          )
-        ],
-      ),
-    );
+    return isLoading
+        ? CircularProgressIndicator()
+        : SingleChildScrollView(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ListView.builder(
+                  itemCount: newQuizList.length,
+                  scrollDirection: Axis.vertical,
+                  shrinkWrap: true,
+                  padding: EdgeInsets.only(top: 16),
+                  itemBuilder: (context, index) {
+                    return QuizListCard(
+                        batch: newQuizList[index]['QuizzInfo']['QuizzInfo']
+                            ['Batch'],
+                        dateTime: newQuizList[index]['QuizzInfo']['QuizzInfo']
+                            ['Date & Time'],
+                        questionList: newQuizList[index]['QuizzQuestions'],
+                        quizName: newQuizList[index]['QuizName']['QuizName'],
+                        quizSubject: newQuizList[index]['QuizzInfo']
+                            ['QuizzInfo']['Subject'],
+                        teacherEmail: newQuizList[index]['QuizzInfo']
+                            ['QuizzInfo']['TeacherEmail']);
+                  },
+                ),
+                FloatingActionButton(
+                  onPressed: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (BuildContext context) => SelectSubject(
+                                teacherEmail: context.watch<User?>()!.email!)));
+                  },
+                  child: const Icon(Icons.add),
+                )
+              ],
+            ),
+          );
   }
 }

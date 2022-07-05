@@ -18,6 +18,8 @@ class _CreateQuizState extends State<CreateQuiz> {
   List<dynamic> selectedquestion = [];
   TextEditingController quizNameController = TextEditingController();
   DateTime dateTime = DateTime(2022, 6, 22, 12, 0);
+  var batchName = ['IIT-JEE', 'CBSE 11-12th'];
+   String dropdownvalue = 'IIT-JEE';
 
   void _itemChange(dynamic itemValue, bool isSelected) {
     setState(() {
@@ -35,8 +37,11 @@ class _CreateQuizState extends State<CreateQuiz> {
 
   _submit() {
     DatabaseManager().createQuiz(quizNameController.text.trim(), widget.subject,
-        widget.teacherEmail, selectedquestion, dateTime);
+        widget.teacherEmail, selectedquestion, dateTime, dropdownvalue);
     print("Quizz Created !!");
+    Navigator.pop(context);
+    Navigator.pop(context);
+    
   }
 
   Future pickDateTime() async {
@@ -104,6 +109,28 @@ class _CreateQuizState extends State<CreateQuiz> {
                     hintText: 'Quizz Name', border: OutlineInputBorder()),
               ),
             ),
+             DropdownButton(
+              // Initial Value
+              value: dropdownvalue,
+
+              // Down Arrow Icon
+              icon: const Icon(Icons.keyboard_arrow_down),
+
+              // Array list of items
+              items: batchName.map((String batchName) {
+                return DropdownMenuItem(
+                  value: batchName,
+                  child: Text(batchName),
+                );
+              }).toList(),
+              // After selecting the desired option,it will
+              // change button value to selected value
+              onChanged: (String? newValue) {
+                setState(() {
+                  dropdownvalue = newValue!;
+                });
+              },
+            ),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               height: 60,
@@ -148,8 +175,7 @@ class _CreateQuizState extends State<CreateQuiz> {
                   child: const Text('Cancel'),
                 ),
                 ElevatedButton(
-                  onPressed:_submit,
-                    
+                  onPressed:  _submit,
                   child: const Text('Submit'),
                 ),
               ],

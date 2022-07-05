@@ -18,9 +18,9 @@ import 'ResultPage.dart';
 class Quizpage extends StatefulWidget {
   List<dynamic> ourquestionList;
   String ourquizName;
-  String? ourquizSubject;
+  String ourquizSubject;
   Timestamp ourdateTime;
-  String? ourbatch;
+  String ourbatch;
   Quizpage({
     required this.ourquestionList,
     required this.ourquizName,
@@ -96,15 +96,7 @@ class _QuizpageState extends State<Quizpage> {
                 )),
                 padding: const EdgeInsets.fromLTRB(10, 5, 10, 20),
                 child: Column(children: <Widget>[
-                  // Container(
-                  //     child: LinearProgressIndicator(
-                  //         backgroundColor:
-                  //             const Color.fromARGB(255, 108, 153, 175),
-                  //         valueColor: const AlwaysStoppedAnimation(
-                  //             Color.fromARGB(255, 36, 36, 91)),
-                  //         minHeight: 20,
-                  //         value: initial)),
-                  Container(
+                    Container(
                     padding: const EdgeInsets.fromLTRB(0, 10, 0, 20),
                     child: Center(
                       child: Container(
@@ -151,7 +143,7 @@ class _QuizpageState extends State<Quizpage> {
                               setState(() {
                                 _value = value;
 
-                                print("Selected value: " + value!);
+                                print("Selected value: " + _value!);
                               });
                             },
                           ),
@@ -169,21 +161,29 @@ class _QuizpageState extends State<Quizpage> {
                             borderRadius: BorderRadius.circular(32.0),
                           ),
                         ),
-                        onPressed: () {
+                        onPressed: () async{
+                          await DatabaseManager().quizans(
+                            widget.ourquizName,index, question['Question'], _value!, question['Answer'].toString(),
+                            question['Option 1'], question['Option 2'], question['Option 3'], question['Option 4']
+                            );
+
                           if (_value == question['Answer']) {
                             setState(() {
                               count = count + 1;
-
                             });
                             print("This is count:" + count.toString());
                           }
-                          
-                         
-                        },
+                          print("SELECTED VALUE: " + _value.toString());
+
+
+                        
+                        }, //Lock button
                         child: const Text(
                           'Lock',
                           style: TextStyle(color: Colors.white),
                         )),
+
+
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -221,7 +221,9 @@ class _QuizpageState extends State<Quizpage> {
                                   duration: const Duration(milliseconds: 500),
                                   curve: Curves.easeIn);
 
-                              if ((index == widget.ourquestionList.length - 1) && (count<=widget.ourquestionList.length)) {
+                              if ((index ==
+                                      widget.ourquestionList.length - 1) &&
+                                  (count <= widget.ourquestionList.length)) {
                                 _showdialog(count);
                                 // Navigator.push(
                                 //     context,
@@ -233,9 +235,12 @@ class _QuizpageState extends State<Quizpage> {
                                 final userdata =
                                     FirebaseAuth.instance.currentUser!;
                                 DatabaseManager().quizmarks(
-                                    widget.ourquizName, count, userdata.uid);
-                                print("This is quiz marks" + DatabaseManager()
-                                    .fetchquizmarks(widget.ourquizName).toString());
+                                    widget.ourquizName, count, userdata.uid,userdata.email!);
+                                // ignore: prefer_interpolation_to_compose_strings
+                                print("This is quiz marks" +
+                                    DatabaseManager()
+                                        .fetchquizmarks(widget.ourquizName)
+                                        .toString());
                                 print("This is count:" + count.toString());
 
                                 Navigator.of(context).pop();

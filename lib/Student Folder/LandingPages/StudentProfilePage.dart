@@ -64,8 +64,10 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
             const Text('Student ProflePAGE'),
             ElevatedButton(
                 style: ButtonStyle(
+                   
                     backgroundColor: MaterialStateProperty.all(
-                        Color.fromARGB(212, 219, 66, 194))),
+                      
+                        Colors.transparent)),
                 onPressed: (() {
                   context.read<AuthService>().signOut();
                   Navigator.push(

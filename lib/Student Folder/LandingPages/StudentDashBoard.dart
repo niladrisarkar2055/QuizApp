@@ -43,7 +43,7 @@ class _StudentDashBoardState extends State<StudentDashBoard> {
                 ElevatedButton(
                     style: ButtonStyle(
                         backgroundColor:
-                            MaterialStateProperty.all(Color.fromARGB(222, 54, 133, 50))),
+                            MaterialStateProperty.all(Colors.transparent)),
                     onPressed: (() {
                       context.read<AuthService>().signOut();
                       Navigator.push(
@@ -55,8 +55,9 @@ class _StudentDashBoardState extends State<StudentDashBoard> {
               ],
             ),
             centerTitle: true,
-            bottom: TabBar(
-              tabs: [Tab(text: "Old", icon: Icon(Icons.face_unlock_rounded),),Tab(text: "New", icon: Icon(Icons.new_label),), ],
+            bottom: const TabBar(
+              // ignore: prefer_const_literals_to_create_immutables
+              tabs: [Tab(text: "Old", icon: Icon(Icons.face_unlock_rounded)),Tab(text: "New", icon: Icon(Icons.new_label),), ],
               
             ),
           ),

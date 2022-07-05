@@ -11,14 +11,21 @@ class DatabaseManager {
   final CollectionReference quizzes =
       FirebaseFirestore.instance.collection('Quizzes');
 
-  Future<void> addBatch(String studentemail, String batchName) async {
+ Future<void> addBatch(String studentemail, String batchName) async {
     List<dynamic> studentEmailList = [];
 
     await batch.doc(batchName).get().then((value) {
-      studentEmailList = value['Students'];
+      if (value.exists) {
+        studentEmailList = value['Students'];
+      } else {
+        studentEmailList = [];
+      }
     });
 
-    studentEmailList.add(studentemail);
+    if (studentEmailList.contains(studentemail) == false) {
+      studentEmailList.add(studentemail);
+    }
+
     return await batch
         .doc(batchName)
         .set({'Batch Name': batchName, 'Students': studentEmailList});
@@ -109,13 +116,60 @@ class DatabaseManager {
   }
 
   //FOR QUIZ MARKS
-  Future<void> quizmarks(String quizname, int count, String uid) async {
-    Map<String, dynamic> map = {'marks': count};
+Future<void> quizmarks(String quizname, int count, String uid, String email) async {
+    Map<String, dynamic> map = {'marks': count, 'quizname': quizname, 'StudentEmail': email};
     await studentList
         .doc(uid)
         .collection('AttemptedQuizes')
         .doc(quizname)
         .set(map);
+  }
+
+  Future<void> quizans(
+      String quizname,
+      int index,
+      String question,
+      String selectedoption,
+      String answer,
+      String option1,
+      String option2,
+      String option3,
+      String option4) async {
+    final userdata = FirebaseAuth.instance.currentUser!;
+    String uid = userdata.uid;
+    Map<String, String> newmap = {
+      'Question': question.toString(),
+      'Option 1': option1,
+      'Option 2': option2,
+      'Option 3': option3,
+      'Option 4': option4,
+      'Selectedoption': selectedoption.toString(),
+      'Answer': answer.toString(),
+    };
+    await studentList
+        .doc(uid)
+        .collection('AttemptedQuizes')
+        .doc(quizname)
+        .collection('Question_and_Ans')
+        .doc((index + 1).toString())
+        .set(newmap);
+  }
+
+  Future getQuizans(String quizname) async {
+    final userdata = FirebaseAuth.instance.currentUser!;
+    String uid = userdata.uid;
+    List Quizquestions = [];
+    await studentList
+        .doc(uid)
+        .collection('AttemptedQuizes')
+        .doc(quizname)
+        .collection('Question_and_Ans')
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              Quizquestions.add(element.data());
+            }));
+
+    return Quizquestions;
   }
 
   Future<int> fetchquizmarks(String quizname) async {
@@ -140,9 +194,9 @@ class DatabaseManager {
 
   // ignore: non_constant_identifier_names
   Future<int> fetch_name_and_phnno() async {
-    int name=-1;
-    int phnno=-1;
-   
+    int name = -1;
+    int phnno = -1;
+
     final userdata = FirebaseAuth.instance.currentUser!;
     if (userdata != null) {
       await FirebaseFirestore.instance
@@ -153,13 +207,11 @@ class DatabaseManager {
                 if (ds.exists)
                   {
                     if (ds.data()!['name'] != "") {name = 1},
-                    if (ds.data()!['number'] != "") { phnno= 1},
-                    
+                    if (ds.data()!['number'] != "") {phnno = 1},
                   }
-                
               });
     }
 
-    return (name+phnno);
+    return (name + phnno);
   }
 }
