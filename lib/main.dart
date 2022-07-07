@@ -7,6 +7,7 @@ import 'package:quizapp/Student Folder/LandingPages/StudentInfo.dart';
 import 'package:quizapp/Student Folder/Services/AuthServices.dart';
 import 'package:quizapp/Student Folder/Services/Databasemanager.dart';
 import 'package:quizapp/Student%20Folder/QuizFiles/QuizPage.dart';
+import 'package:quizapp/Student%20Folder/QuizFiles/Report.dart';
 import 'package:quizapp/Student%20Folder/StudentMain.dart';
 import 'package:quizapp/StudentorTeacherPage.dart';
 import 'package:quizapp/Teacher%20Folder/TeachersMain.dart';
@@ -62,7 +63,6 @@ class AuthanticationWrapper extends StatefulWidget {
 class _AuthanticationWrapperState extends State<AuthanticationWrapper> {
   dynamic userinfo;
   Future<dynamic> CheckRole() async {
-   
     String role = '';
     final userdata = FirebaseAuth.instance.currentUser!;
     if (userdata != null) {
@@ -108,5 +108,7 @@ class _AuthanticationWrapperState extends State<AuthanticationWrapper> {
     } else {
       return Verification();
     }
+
+    // return Report();
   }
 }

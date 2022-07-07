@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/physics.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:quizapp/Student%20Folder/QuizFiles/QuizListCard.dart';
 import 'package:quizapp/Student%20Folder/Services/Databasemanager.dart';
 
@@ -45,61 +46,67 @@ class _OldQuizForStudentsState extends State<OldQuizForStudents> {
     super.initState();
     getOldQuizList();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     return isloading
-        ? Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Expanded(
-                child: GridView.builder(
-                  physics: BouncingScrollPhysics(),
-                  itemCount: (oldQuizList.length),
-                  scrollDirection: Axis.vertical,
-                  shrinkWrap: true,
-                  padding: EdgeInsets.only(top: 16),
-                  itemBuilder: (context, index) {
-                    if (oldQuizList.length > 0) {}
-                    return Container(
-                      height: 250,
-                      width: 200,
-                      margin: EdgeInsets.all(7),
-                      child: QuizcardStudentSide(
-                        batch: oldQuizList[index]['QuizzInfo']['QuizzInfo']
-                            ['Batch'],
-                        dateTime: oldQuizList[index]['QuizzInfo']['QuizzInfo']
-                            ['Date & Time'],
-                        questionList: oldQuizList[index]['QuizzQuestions'],
-                        quizName: oldQuizList[index]['QuizName']['QuizName'],
-                        quizSubject: oldQuizList[index]['QuizzInfo']['QuizzInfo']
-                            ['Subject'],
-                      ),
-                    );
-                    // QuizcardStudentSide(
-                    //   batch: 'IIT - JEE',
-                    //   dateTime: oldQuizList[index +1]['QuizzInfo']['QuizzInfo']
-                    //       ['Date & Time'],
-                    //   questionList: oldQuizList[index + 1]['QuizzQuestions'],
-                    //   quizName: oldQuizList[index + 1]['QuizName']['QuizName'],
-                    //   quizSubject: oldQuizList[index + 1]['QuizzInfo']['Subject'],
-                    // )
-                  },
-                  gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 2,
-                    // crossAxisSpacing: 2,
-                    // mainAxisSpacing: 2,
+        ? SafeArea(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Expanded(
+                  child: GridView.builder(
+                    physics: BouncingScrollPhysics(),
+                    itemCount: (oldQuizList.length),
+                    scrollDirection: Axis.vertical,
+                    shrinkWrap: true,
+                    padding: EdgeInsets.only(top: 16),
+                    itemBuilder: (context, index) {
+                      if (oldQuizList.length > 0) {}
+                      return Container(
+                        height: 250,
+                        width: 200,
+                        margin: EdgeInsets.all(7),
+                        child: QuizcardStudentSide(
+                          
+                          batch: oldQuizList[index]['QuizzInfo']['QuizzInfo']
+                              ['Batch'],
+                          dateTime: oldQuizList[index]['QuizzInfo']['QuizzInfo']
+                              ['Date & Time'],
+                          questionList: oldQuizList[index]['QuizzQuestions'],
+                          quizName: oldQuizList[index]['QuizName']['QuizName'],
+                          quizSubject: oldQuizList[index]['QuizzInfo']
+                              ['QuizzInfo']['Subject'],
+                        ),
+                      );
+                      // QuizcardStudentSide(
+                      //   batch: 'IIT - JEE',
+                      //   dateTime: oldQuizList[index +1]['QuizzInfo']['QuizzInfo']
+                      //       ['Date & Time'],
+                      //   questionList: oldQuizList[index + 1]['QuizzQuestions'],
+                      //   quizName: oldQuizList[index + 1]['QuizName']['QuizName'],
+                      //   quizSubject: oldQuizList[index + 1]['QuizzInfo']['Subject'],
+                      // )
+                    },
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      // crossAxisSpacing: 2,
+                      // mainAxisSpacing: 2,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           )
-        : Transform.scale(
-            scale: 0.1,
-            child: CircularProgressIndicator(
-              color: Colors.white,
-              backgroundColor: Colors.blue.withOpacity(0.2),
-              strokeWidth: 20,
+        : Container(
+            // color: Colors.white,
+            child:  Center(
+              child: SpinKitThreeBounce(
+                
+                color: Colors.deepPurple[700],
+                size: 50.0,
+              ),
             ),
           );
   }

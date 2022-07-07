@@ -93,11 +93,11 @@ class _AuthanticationWrapperState extends State<AuthanticationWrapper> {
     Future<int> sum = check() as Future<int>;
     if (appuser != null) {
       if (userinfo == "Student") {
-        if (sum == 2) {
-          return StudentDashBoard();
-        } else {
+        // if (sum = 2) {
+        //   return StudentDashBoard();
+        // } else {
           return Studentinfo(email: appuser.email!, uID: appuser.uid);
-        }
+        // }
       } else {
         return SignInPage();
       }

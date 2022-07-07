@@ -24,106 +24,173 @@ class _TeacherInfoState extends State<TeacherInfo> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 30),
-          child: Container(
-            height: MediaQuery.of(context).size.height * 0.8,
-            decoration: BoxDecoration(
-                color: Color.fromARGB(185, 219, 133, 234),
-                borderRadius: BorderRadius.circular(30)),
-            padding: EdgeInsets.all(20),
-            child: Column(children: [
-              const SizedBox(
-                height: 60,
-              ),
-              Container(
-                alignment: Alignment.center,
-                child: Text(
-                  "Welcome, ${widget.email}",
-                  style: const TextStyle(
-                      fontSize: 32.0,
-                      color: Color.fromARGB(255, 52, 8, 48),
-                      fontWeight: FontWeight.bold),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: TextField(
-                  controller: subjectController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Subject',
-                      hintText: 'Choose your department'),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: TextField(
-                  controller: nameController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Name',
-                      hintText: 'Enter your name '),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 40),
-                width: MediaQuery.of(context).size.width * 0.8,
-                child: TextField(
-                  controller: numberController,
-                  decoration: const InputDecoration(
-                      border: OutlineInputBorder(),
-                      labelText: 'Phone No.',
-                      hintText: 'Add your number'),
-                ),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    DatabaseManager().createTeacher(
-                        widget.email,
-                        nameController.text.trim(),
-                        widget.uID,
-                        numberController.text.trim(),
-                        subjectController.text.trim());
-                    DatabaseManager().createTUser( widget.email, "Teacher");
-                    Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) =>
-                                TeacherHomePage(teacherEmail: widget.email)));
-                  },
-                  child: const Text('Save')),
-
-                  // ElevatedButton(
-                  // onPressed: () async {
-                    
-                  //   Navigator.pushReplacement(
-                  //       context,
-                  //       MaterialPageRoute(
-                  //           builder: (context) =>
-                  //               Verification()));
-                  // },
-                  // child: const Text('Go to'))
-
-            ]),
-          ),
+      appBar: AppBar(
+        title: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: const [
+            Text('Personal Info'),
+          ],
         ),
+        backgroundColor: Colors.deepPurpleAccent,
+        centerTitle: true,
       ),
+      body: SingleChildScrollView(
+          child: Column(
+        children: [
+          SizedBox(
+            height: 20,
+          ),
+          Container(
+            height: 100,
+            width: double.infinity,
+            decoration: BoxDecoration(color: Colors.white10),
+            child: Column(
+              children: [
+                Text('Welcome ${widget.email} to,', style: TextStyle(color: Colors.black, fontSize: 18)  ),
+                Text('SpeEdlabs', style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 38, fontWeight: FontWeight.bold),
+                ),
+                Divider(height: 30, thickness: 3,)
+              ],
+            ),
+          ),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+            child: Container(
+              
+              decoration: const BoxDecoration(
+                  color: Color.fromARGB(164, 124, 77, 255),
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(10),
+                    bottomRight: Radius.circular(10),
+                    topLeft: Radius.circular(0),
+                    topRight: Radius.circular(100)
+                  )),
+              padding: EdgeInsets.all(20),
+              child: Column(children: [
+                const SizedBox(
+                  height: 60,
+                ),
+                
+               
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: TextField(
+                    
+                    controller: subjectController,
+                    cursorColor: Colors.white,
+                    decoration: const InputDecoration(
+                      focusColor: Colors.white,
+                      hoverColor: Colors.white,
+                      
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 3, color: Colors.deepPurpleAccent, style: BorderStyle.solid)
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(width: 4, color: Colors.greenAccent, style: BorderStyle.solid)
+                        ),
+                        labelText: 'Subject',
+                        labelStyle: TextStyle(color:Color.fromARGB(255, 255, 255, 255),  fontWeight: FontWeight.bold),
+                        ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: TextField(
+                    controller: nameController,
+                    cursorColor: Colors.white,
+                    decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 3, color: Colors.deepPurpleAccent, style: BorderStyle.solid)
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(width: 4, color: Colors.greenAccent, style: BorderStyle.solid)
+                        ),
+                        labelText: 'Name',
+                        labelStyle: TextStyle(color:Color.fromARGB(255, 255, 255, 255),  fontWeight: FontWeight.bold),
+                        ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 40),
+                  width: MediaQuery.of(context).size.width * 0.8,
+                  child: TextField(
+                    cursorColor: Colors.white,
+                    controller: numberController,
+                    decoration: const InputDecoration(
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 3, color: Colors.deepPurpleAccent, style: BorderStyle.solid)
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(width: 4, color: Colors.greenAccent, style: BorderStyle.solid)
+                        ),
+                        labelText: 'Phone No.',
+                        labelStyle: TextStyle(color:Color.fromARGB(255, 255, 255, 255), fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                ),
+                const SizedBox(
+                  height: 20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    ElevatedButton(
+                        onPressed: () async {
+                          DatabaseManager().createTeacher(
+                              widget.email,
+                              nameController.text.trim(),
+                              widget.uID,
+                              numberController.text.trim(),
+                              subjectController.text.trim());
+                          DatabaseManager().createTUser(widget.email, "Teacher");
+                     
+                          Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => TeacherHomePage(
+                                      teacherEmail: widget.email,
+                                      teacherUid: widget.uID)));
+                        },
+                        child: const Text('Save'),
+                        
+                        style: ElevatedButton.styleFrom(
+                          primary: Colors.deepPurpleAccent,
+                          onPrimary: Colors.white
+
+                            
+                        ),),
+                        
+                        SizedBox(width: 20,),
+                        ElevatedButton(
+                    onPressed: () async {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => Verification()));
+                    },
+                    child: const Text('Go to'),
+                     style: ElevatedButton.styleFrom(
+                          primary: Colors.deepPurpleAccent,
+                          onPrimary: Colors.white
+
+                            
+                        ),)
+                  ],
+                ),
+                
+              ]),
+            ),
+          ),
+        ],
+      )),
     );
   }
 }

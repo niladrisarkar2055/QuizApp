@@ -13,7 +13,7 @@ import 'package:quizapp/Student%20Folder/LandingPages/StudentProfilePage.dart';
 import 'package:quizapp/Student%20Folder/QuizFiles/QuizQuestionCard.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:quizapp/Student%20Folder/Services/Databasemanager.dart';
-import 'ResultPage.dart';
+import 'QNApage.dart';
 
 class Quizpage extends StatefulWidget {
   List<dynamic> ourquestionList;
@@ -224,7 +224,7 @@ class _QuizpageState extends State<Quizpage> {
                               if ((index ==
                                       widget.ourquestionList.length - 1) &&
                                   (count <= widget.ourquestionList.length)) {
-                                _showdialog(count);
+                                // _showdialog(count);
                                 // Navigator.push(
                                 //     context,
                                 //     MaterialPageRoute(
@@ -236,6 +236,7 @@ class _QuizpageState extends State<Quizpage> {
                                     FirebaseAuth.instance.currentUser!;
                                 DatabaseManager().quizmarks(
                                     widget.ourquizName, count, userdata.uid,userdata.email!);
+                                 DatabaseManager().addQuizReport(userdata.email!, count, widget.ourquizName);
                                 // ignore: prefer_interpolation_to_compose_strings
                                 print("This is quiz marks" +
                                     DatabaseManager()

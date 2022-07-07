@@ -29,28 +29,26 @@ class _SelectSubjectState extends State<SelectSubject> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Subject')),
+      appBar: AppBar(title: Text('Subject'),
+      centerTitle: true,
+      backgroundColor: Colors.deepPurpleAccent,),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Text('Choose the subject..', style: TextStyle(color: Colors.blue, fontSize: 22),),
+            const Text('Choose the subject', style: TextStyle(color: Colors.deepPurpleAccent, fontSize: 26, fontWeight: FontWeight.normal),),
+            const SizedBox(height:
+            20),
             DropdownButton(
                   // Initial Value
                   value: dropdownvalue,
-    
-                  // Down Arrow Icon
                   icon: const Icon(Icons.keyboard_arrow_down),
-    
-                  // Array list of items
                   items: items.map((String items) {
                     return DropdownMenuItem(
                       value: items,
                       child: Text(items),
                     );
                   }).toList(),
-                  // After selecting the desired option,it will
-                  // change button value to selected value
                   onChanged: (String? newValue) {
                    
                       setState(() {
@@ -58,15 +56,31 @@ class _SelectSubjectState extends State<SelectSubject> {
                       });
                 
                   },
+                  style: TextStyle(color: Colors.black, fontSize: 19, fontWeight: FontWeight.bold),
             ),
-            ElevatedButton(
-              child: const Text('Cancel'),
-              onPressed: _cancel,
-            ),
-            ElevatedButton(
-              child: const Text('Submit'),
+           const SizedBox(height:
+            20),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  child: const Text('Back'),
+                  onPressed: _cancel,
+                  style: ElevatedButton.styleFrom(
+                    primary: Colors.deepPurpleAccent
+                  ),
+                ),
+                SizedBox(width: 20,),
+                 ElevatedButton(
+              child: const Text('Create'),
               onPressed: _submit,
+               style: ElevatedButton.styleFrom(
+                    primary: Colors.deepPurpleAccent
+                  ),
             ),
+              ],
+            ),
+           
           ],
         ),
       ),

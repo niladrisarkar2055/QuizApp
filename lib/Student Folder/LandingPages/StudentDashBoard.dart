@@ -35,29 +35,33 @@ class _StudentDashBoardState extends State<StudentDashBoard> {
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+            backgroundColor: Colors.deepPurple[400],
             elevation: 10,
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                const Text('Student Portal'),
-                ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.transparent)),
-                    onPressed: (() {
+            title: Text('Student Dashboard'),
+            actions: [
+              IconButton(
+                onPressed: (() {
                       context.read<AuthService>().signOut();
                       Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) => const Verification()));
                     }),
-                    child: const Text('Log out'))
-              ],
-            ),
+                icon: Icon(Icons.logout))
+            ],
             centerTitle: true,
             bottom: const TabBar(
-              // ignore: prefer_const_literals_to_create_immutables
-              tabs: [Tab(text: "Old", icon: Icon(Icons.face_unlock_rounded)),Tab(text: "New", icon: Icon(Icons.new_label),), ],
+              indicator: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25)),
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.white,
+              tabs: [
+                Tab(text: "Old", icon: Icon(Icons.face_unlock_rounded)),
+                Tab(text: "New", icon: Icon(Icons.new_label),), ],
               
             ),
           ),
@@ -65,7 +69,9 @@ class _StudentDashBoardState extends State<StudentDashBoard> {
           body: Container(
             decoration: const BoxDecoration(
                      gradient: LinearGradient(colors: [
-                      Color.fromARGB(195, 120, 205, 235),Color.fromARGB(192, 10, 126, 123)
+                      // Color.fromARGB(255, 63, 30, 79),Color.fromARGB(255, 101, 42, 116),
+                      //  Color.fromARGB(255, 63, 30, 79)
+                      Colors.white,Color.fromARGB(255, 84, 51, 141)
                       
                     ],)),
             child: TabBarView(

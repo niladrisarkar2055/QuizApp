@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:quizapp/Student Folder/LandingPages/StudentDashBoard.dart';
 import 'package:quizapp/Student Folder/LandingPages/StudentProfilePage.dart';
 import 'package:quizapp/Student Folder/Services/AuthServices.dart';
+import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 
 class BottomNavigation extends StatefulWidget {
   const BottomNavigation({Key? key}) : super(key: key);
@@ -13,50 +14,43 @@ class BottomNavigation extends StatefulWidget {
 
 class _BottomNavigationState extends State<BottomNavigation> {
   int currentIndex = 0;
-  final screen = [StudentDashBoard(), StudentProfilePage()];
-
+  int index = 2;
   @override
   Widget build(BuildContext context) {
-    return 
-     Scaffold(
-    //  appBar: AppBar(
-    //      title: Row(
-    //       mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    //       children: [
-    //         const Text('Student Dashboard'),
+    final screen = <Widget>[
+      StudentDashBoard(),
+      StudentProfilePage()
+      
+    ];
 
-    //         ElevatedButton(
-    //             style: ButtonStyle(
-    //                 backgroundColor:
-    //                     MaterialStateProperty.all(Color.fromARGB(255, 0, 0, 0))),
-    //             onPressed: (() {
-    //               context.read<AuthService>().signOut();
-    //             }),
-    //             child: const Text('Log out'))
-    //       ],
-    //      )
-    // ),
-    body: IndexedStack(
-      index:currentIndex,
-      children: screen),
+    return Scaffold(
+      backgroundColor: Colors.deepPurple,
+      body: Container(
+          child: IndexedStack(
+          index:currentIndex,
+          children: screen),
+      ),
 
-    bottomNavigationBar: BottomNavigationBar(
-      fixedColor: Colors.tealAccent,
-      type: BottomNavigationBarType.shifting,
-      currentIndex: currentIndex,
-      onTap: (index) => setState(() => currentIndex = index),
-      iconSize: 20,
-      items: const [
-        BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'DashBoard',
-            backgroundColor: Color.fromARGB(250, 48, 103, 109)),
-        BottomNavigationBarItem(
-            icon: Icon(Icons.group_rounded),
-            label: 'ProfilePage',
-            backgroundColor: Color.fromARGB(250, 48, 103, 109)),
-      ],
-    ),
+        bottomNavigationBar: BottomNavigationBar(
+        fixedColor: Color.fromARGB(255, 247, 255, 253),
+        type: BottomNavigationBarType.shifting,
+        currentIndex: currentIndex,
+        onTap: (index) => setState(() => currentIndex = index),
+        iconSize: 20,
+        items: const [
+          BottomNavigationBarItem(
+             
+              icon: Icon(Icons.home),
+              label: 'DashBoard',
+              backgroundColor: Color.fromARGB(255, 152, 72, 169),),
+
+          BottomNavigationBarItem(
+              icon: Icon(Icons.group_rounded),
+              label: 'ProfilePage',
+              backgroundColor: Color.fromARGB(255, 152, 72, 169),),
+        ],
+      ),
+
     );
   }
 }

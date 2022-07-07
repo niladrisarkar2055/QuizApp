@@ -95,19 +95,34 @@ class _CreateQuizState extends State<CreateQuiz> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Create Quizz')),
+      appBar: AppBar(title: const Text('Create Quizz'),
+      centerTitle: true,
+      backgroundColor: Colors.deepPurpleAccent),
       body: SingleChildScrollView(
         child: Column(
           children: [
+            SizedBox(height: 20,),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               height: 40,
               child: TextField(
-                style: const TextStyle(height: 2.0),
-                controller: quizNameController,
-                decoration: const InputDecoration(
-                    hintText: 'Quizz Name', border: OutlineInputBorder()),
-              ),
+                    
+                    controller: quizNameController,
+                    cursorColor: Colors.white,
+                    decoration: const InputDecoration(
+                      focusColor: Colors.white,
+                      hoverColor: Colors.white,
+                      
+                      focusedBorder: OutlineInputBorder(
+                          borderSide: BorderSide(width: 3, color: Colors.deepPurpleAccent, style: BorderStyle.solid)
+                        ),
+                        border: OutlineInputBorder(
+                          borderSide: BorderSide(width: 4, color: Colors.greenAccent, style: BorderStyle.solid)
+                        ),
+                        labelText: 'Quiz Name',
+                        labelStyle: TextStyle(color:Colors.black26,  fontWeight: FontWeight.bold),
+                        ),
+                  ),
             ),
              DropdownButton(
               // Initial Value
@@ -129,21 +144,30 @@ class _CreateQuizState extends State<CreateQuiz> {
                 setState(() {
                   dropdownvalue = newValue!;
                 });
+              
               },
+              style: const TextStyle(color: Colors.black, fontSize: 19, fontWeight: FontWeight.normal),
             ),
             SizedBox(
               width: MediaQuery.of(context).size.width * 0.7,
               height: 60,
               child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Text('${dateTime.year} / ${dateTime.month} / ${dateTime.day}',
-                      style: TextStyle(backgroundColor: Colors.blue)),
-                  SizedBox(width: 10),
-                  Text(
-                    '${dateTime.hour} : ${dateTime.minute}',
-                    style: TextStyle(backgroundColor: Colors.blue),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text('${dateTime.year} / ${dateTime.month} / ${dateTime.day}',
+                        style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.normal)),
                   ),
                   SizedBox(width: 10),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                    child: Text(
+                      '${dateTime.hour} : ${dateTime.minute}',
+                      style: const TextStyle(color: Colors.black, fontSize: 14, fontWeight: FontWeight.normal, ),
+                    ),
+                  ),
+                  SizedBox(width: 5),
                   ElevatedButton(
                       onPressed: () async {
                         pickDateTime();

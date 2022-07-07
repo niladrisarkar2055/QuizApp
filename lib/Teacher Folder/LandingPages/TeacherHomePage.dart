@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:quizapp/StudentorTeacherPage.dart';
 import 'package:quizapp/Teacher%20Folder/LandingPages/Teacher_SignInPage.dart';
+import 'package:quizapp/Teacher%20Folder/LandingPages/TeacherinfoPage.dart';
 import 'package:quizapp/Teacher%20Folder/Services/AuthtenticationServices.dart';
 import 'package:quizapp/main.dart';
 
@@ -10,7 +11,8 @@ import '../Quizes/oldQuizes.dart';
 
 class TeacherHomePage extends StatefulWidget {
   String teacherEmail;
-  TeacherHomePage({Key? key, required this.teacherEmail}) : super(key: key);
+  String teacherUid;
+  TeacherHomePage({Key? key, required this.teacherEmail, required this.teacherUid}) : super(key: key);
 
   @override
   State<TeacherHomePage> createState() => _TeacherHomePageState();
@@ -19,10 +21,7 @@ class TeacherHomePage extends StatefulWidget {
 class _TeacherHomePageState extends State<TeacherHomePage> {
   int _selectedIndex = 0;
   late String tEmail;
-  List<Widget> quizpages = <Widget>[
-    const OldQuizzes(),
-    NewQuizzes()
-  ];
+  List<Widget> quizpages = <Widget>[const OldQuizzes(), NewQuizzes()];
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
@@ -36,14 +35,31 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
       length: 2,
       child: Scaffold(
           appBar: AppBar(
+            elevation: 4,
+            backgroundColor: Colors.deepPurpleAccent,
             title: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
+                IconButton(
+                    onPressed: () {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => TeacherInfo(
+                                    email: widget.teacherEmail,
+                                    uID: widget.teacherUid,
+                                  )));
+                    },
+                    icon: const Icon(Icons.menu)),
                 const Text('Teacher Portal'),
                 ElevatedButton(
-                    style: ButtonStyle(
-                        backgroundColor:
-                            MaterialStateProperty.all(Colors.blueGrey)),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(32.0)),
+                      minimumSize: Size(60, 30),
+                      primary: Colors.white,
+                      onPrimary: Colors.deepPurpleAccent,
+                    ),
                     onPressed: (() {
                       context.read<AuthService>().signOut();
                       Navigator.push(
@@ -51,33 +67,32 @@ class _TeacherHomePageState extends State<TeacherHomePage> {
                           MaterialPageRoute(
                               builder: (context) => const Verification()));
                     }),
-                    child: const Text('Log out'))
+                    child: const Icon(Icons.logout))
               ],
             ),
             centerTitle: true,
-            bottom: TabBar(
-              tabs: [Tab(text: "Old", icon: Icon(Icons.time_to_leave),),Tab(text: "New", icon: Icon(Icons.add),), ],
-              
+            bottom: const TabBar(
+              indicator: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(25),
+                    topRight: Radius.circular(25)),
+                color: Color.fromARGB(255, 255, 255, 255),
+              ),
+              labelColor: Colors.black,
+              unselectedLabelColor: Colors.white,
+              tabs: [
+                Tab(
+                  text: "Old",
+                ),
+                Tab(
+                  text: "New",
+                ),
+              ],
             ),
           ),
-          // bottomNavigationBar: BottomNavigationBar(
-          //   items: const <BottomNavigationBarItem>[
-          //     BottomNavigationBarItem(
-          //       icon: Icon(Icons.label),
-          //       label: 'Old',
-          //     ),
-          //     BottomNavigationBarItem(
-          //       icon: Icon(Icons.add),
-          //       label: 'New',
-          //     ),
-          //   ],
-          //   currentIndex: _selectedIndex,
-          //   onTap: _onItemTapped,
-          // ),
           body: TabBarView(
             children: [OldQuizzes(), NewQuizzes()],
-          )
-          ),
+          )),
     );
   }
 }

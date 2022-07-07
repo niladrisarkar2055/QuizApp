@@ -10,8 +10,36 @@ class DatabaseManager {
       FirebaseFirestore.instance.collection('Batch');
   final CollectionReference quizzes =
       FirebaseFirestore.instance.collection('Quizzes');
+        final CollectionReference maths =
+      FirebaseFirestore.instance.collection('Maths');
+  final CollectionReference physics =
+      FirebaseFirestore.instance.collection('Physics');
 
- Future<void> addBatch(String studentemail, String batchName) async {
+
+//  Future<void> createquestion(String subject, String question, String option1,
+//       String option2, String option3, String option4, String answer) async {
+//     Map<String, dynamic> map = {
+//       'Question': question,
+//       'Subject': subject,
+//       'Option 1': option1,
+//       'Option 2': option2,
+//       'Option 3': option3,
+//       'Option 4': option4,
+//       'Answer': answer
+//     };
+//     return await maths.doc(question).set(map);
+//   }
+
+  Future<void> addQuizReport(
+      String studentEmail, int marks, String quizName) async {
+    await quizzes
+        .doc(quizName)
+        .collection('Report')
+        .doc(studentEmail)
+        .set({'StudentEmail': studentEmail, 'Marks': marks});
+  }
+
+  Future<void> addBatch(String studentemail, String batchName) async {
     List<dynamic> studentEmailList = [];
 
     await batch.doc(batchName).get().then((value) {
@@ -72,9 +100,9 @@ class DatabaseManager {
   Future getQuizList() async {
     List<dynamic> quizNameList = [];
     await quizzes.get().then((value) {
-      value.docs.forEach((element) {
+      for (var element in value.docs) {
         quizNameList.add(element.data());
-      });
+      }
     });
 
     List<dynamic> quizInfoList = [];
@@ -116,8 +144,13 @@ class DatabaseManager {
   }
 
   //FOR QUIZ MARKS
-Future<void> quizmarks(String quizname, int count, String uid, String email) async {
-    Map<String, dynamic> map = {'marks': count, 'quizname': quizname, 'StudentEmail': email};
+  Future<void> quizmarks(
+      String quizname, int count, String uid, String email) async {
+    Map<String, dynamic> map = {
+      'marks': count,
+      'quizname': quizname,
+      'StudentEmail': email
+    };
     await studentList
         .doc(uid)
         .collection('AttemptedQuizes')
@@ -213,5 +246,46 @@ Future<void> quizmarks(String quizname, int count, String uid, String email) asy
     }
 
     return (name + phnno);
+  }
+
+  Fetchrank(String quizname, int marks) async {
+    late int mymarks;
+    final userdata = FirebaseAuth.instance.currentUser!;
+    String email = userdata.email!;
+    print('This is my email: ' + email);
+    List<int> marks = [];
+    await quizzes
+        .doc(quizname)
+        .collection('Report')
+        .doc(email)
+        .get()
+        .then((value) {
+      mymarks = value['Marks'];
+      print(mymarks);
+    });
+
+    List<int> allmarks = [];
+    await quizzes
+        .doc(quizname)
+        .collection('Report')
+        .get()
+        .then((value) => value.docs.forEach((element) {
+              allmarks.add(element.data()['Marks']);
+            }));
+    print('I dont know what is happening: ');
+    allmarks.sort();
+    int k = 0;
+    double avg = 0;
+    for (int i = 0; i < allmarks.length; i++) {
+      avg += allmarks[i];
+      if (allmarks[i] == mymarks) {
+        k = allmarks.length - i;
+      }
+    }
+    avg = avg / allmarks.length;
+    print('Average of ' + quizname + " is : " + avg.toStringAsPrecision(3));
+    print(allmarks.toList());
+    // print('MY MARKS IS : ' + marks.toString());
+    print('My rank is :' + k.toString());
   }
 }

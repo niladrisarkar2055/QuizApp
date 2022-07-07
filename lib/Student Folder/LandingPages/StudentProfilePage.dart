@@ -58,30 +58,24 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
     return Scaffold(
         appBar: AppBar(
           elevation: 10,
-            title: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text('Student ProflePAGE'),
-            ElevatedButton(
-                style: ButtonStyle(
-                   
-                    backgroundColor: MaterialStateProperty.all(
-                      
-                        Colors.transparent)),
+          backgroundColor: Color.fromARGB(255, 116, 50, 130),
+            title: Text('Student Profilepage'),
+            centerTitle: true,
+            actions: [
+              IconButton(
                 onPressed: (() {
-                  context.read<AuthService>().signOut();
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => const Verification()));
-                }),
-                child: const Text('Log out'))
-          ],
-        )),
+                      context.read<AuthService>().signOut();
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => const Verification()));
+                    }),
+                icon: Icon(Icons.logout_rounded))
+            ],),
         body: Container(
            decoration: const BoxDecoration(
                    gradient: LinearGradient(colors: [
-                      Color.fromARGB(195, 120, 205, 235),Color.fromARGB(192, 10, 126, 123)
+                      Color.fromARGB(255, 67, 48, 71),Color.fromARGB(255, 78, 27, 87)
                       
                     ],)
                     ),
@@ -102,7 +96,7 @@ class _StudentProfilePageState extends State<StudentProfilePage> {
                             height: MediaQuery.of(context).size.height * 0.6,
                             decoration: BoxDecoration(
                                  gradient: const LinearGradient(colors: [
-                                  Color.fromARGB(189, 106, 27, 113),Color.fromARGB(255, 154, 74, 207)
+                                  Color.fromARGB(188, 165, 73, 174),Color.fromARGB(255, 154, 74, 207)
                         
                        ],),
                                 borderRadius: BorderRadius.circular(30)),

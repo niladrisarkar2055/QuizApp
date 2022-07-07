@@ -7,9 +7,10 @@ import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:quizapp/Student%20Folder/LandingPages/StudentProfilePage.dart';
 import 'package:quizapp/Student%20Folder/QuizFiles/QuizPage.dart';
+import 'package:quizapp/Student%20Folder/QuizFiles/Report.dart';
 import 'package:quizapp/Student%20Folder/Services/Databasemanager.dart';
 
-import 'ResultPage.dart';
+import 'QNApage.dart';
 
 class QuizcardStudentSide extends StatefulWidget {
   List<dynamic> questionList;
@@ -85,6 +86,111 @@ class _QuizcardStudentSideState extends State<QuizcardStudentSide> {
   bool attention = false;
   @override
   Widget build(BuildContext context) {
+    return Card(
+      color: Colors.transparent,
+      elevation: 0,
+      semanticContainer: true,
+      clipBehavior: Clip.antiAliasWithSaveLayer,
+      borderOnForeground: true,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(20),
+        child: InkWell(
+            onTap: () async {
+
+              
+                    
+
+
+              int marks =
+                  await DatabaseManager().fetchquizmarks(widget.quizName);
+              if (marks == -1) {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => Quizpage(
+                        ourquestionList: widget.questionList,
+                        ourquizName: widget.quizName,
+                        ourquizSubject: widget.quizSubject,
+                        ourdateTime: widget.dateTime,
+                        ourbatch: widget.batch,
+                      ),
+                    ));
+              } else {
+                 int marks =
+                  await DatabaseManager().fetchquizmarks(widget.quizName);
+                await DatabaseManager().Fetchrank(widget.quizName, marks);
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (context) => Report(
+                            count: marks, quizname: widget.quizName, quizsubject: widget.quizSubject,)));
+              }
+            },
+            child: Container(
+              height: 250,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  image: DecorationImage(
+                    colorFilter: ColorFilter.mode(
+                        Colors.white.withOpacity(0.5), BlendMode.dstATop),
+                    image: AssetImage('assets/${widget.quizSubject}.jpg'),
+                    fit: BoxFit.cover,
+                  ),
+                  ),
+              child: Container(
+                decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(20),
+                    gradient:
+                        LinearGradient(begin: Alignment.bottomCenter, colors: [
+                      Colors.deepPurpleAccent.withOpacity(.3),
+                      Colors.deepPurpleAccent.withOpacity(.1),
+                    ])),
+                child:
+                    Column(mainAxisAlignment: MainAxisAlignment.end, children: [
+                  Container(
+                    alignment: Alignment.center,
+                    margin: EdgeInsets.all(5),
+                    padding: EdgeInsets.all(13),
+                    child: Text(
+                      widget.quizName.toUpperCase(),
+                      style: const TextStyle(
+                          color: Color.fromRGBO(0, 0, 0, 0.6),
+                          fontSize: 32,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ),
+                  const SizedBox(height: 10),
+                  Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
+                    height: 30,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                        color: Colors.white),
+                    child: Center(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        style: ElevatedButton.styleFrom(
+                            primary: Colors.transparent, elevation: 0),
+                        child: const Text(
+                          'See Report',
+                          style: TextStyle(
+                              color: Colors.deepPurpleAccent,
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold),
+                        ),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 30,
+                  )
+                ]),
+              ),
+            )),
+      ),
+    );
+
     // return Container(
     //   decoration: BoxDecoration(
     //     gradient: LinearGradient(colors: [
@@ -241,60 +347,86 @@ class _QuizcardStudentSideState extends State<QuizcardStudentSide> {
     //   );
     // }
 
-    return Card(
-      borderOnForeground: attention,
-      color: Colors.transparent,
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(20),
-        child: InkWell(
-          onTap: () async {
-            int marks = await DatabaseManager().fetchquizmarks(widget.quizName);
-          
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                    builder: (context) =>
-                        ResultPage(count: marks, Quizname: widget.quizName)));
-          },
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.spaceAround,
-            children: [
+    // return Card(
+    //   borderOnForeground: attention,
+    //   color: Colors.transparent,
+    //   clipBehavior: Clip.antiAliasWithSaveLayer,
+    //   child: ClipRRect(
+    //     borderRadius: BorderRadius.circular(20),
+    //     child: InkWell(
+    //       onTap: () async {
+    //         int marks = await DatabaseManager().fetchquizmarks(widget.quizName);
 
-             
-              Container(
-                padding: EdgeInsets.all(10),
-                 decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                 
-                ),
-                child: Image.asset('assets/speedlabsLogo.png', height: 100, width:  100,)),
-              // Icon( Icons.quiz_rounded, size: 70,color: Color.fromARGB(255, 43, 42, 39), ),
-              Container(
-                padding: EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  gradient: const LinearGradient(
-                    colors: [
-                      Color.fromARGB(195, 235, 199, 120),
-                      Color.fromARGB(192, 126, 81, 10)
-                    ],
-                  ),
-                ),
-                margin: EdgeInsets.all(2),
-                // color: Color.fromARGB(255, 67, 116, 84),
-                child: Text(
-                  widget.quizName,
-                  style: TextStyle(
-                      decorationColor: Colors.blue[200],
-                      fontFamily: 'RobotoMono',
-                      fontSize: 25,
-                      color: Color.fromARGB(255, 255, 255, 255)),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+    //         Navigator.push(
+    //             context,
+    //             MaterialPageRoute(
+    //                 builder: (context) =>
+    //                    QuestionAndAnswerPage(count: marks, Quizname: widget.quizName)));
+    //         // Navigator.push(
+    //         //           context,
+    //         //           MaterialPageRoute(
+    //         //             builder: (context) => Quizpage(
+    //         //               ourquestionList: widget.questionList,
+    //         //               ourquizName: widget.quizName!,
+    //         //               ourquizSubject: widget.quizSubject,
+    //         //               ourdateTime: widget.dateTime,
+    //         //               ourbatch: widget.batch,
+    //         //             ),
+    //         //           ));
+    //       },
+    //       child: Column(
+    //         mainAxisAlignment: MainAxisAlignment.spaceAround,
+    //         children: [
+
+    //           Container(
+    //             padding: EdgeInsets.all(10),
+    //              decoration: BoxDecoration(
+    //               borderRadius: BorderRadius.circular(10),
+
+    //             ),
+    //             child: Image.asset('assets/speedlabsLogo.png', height: 100, width:  100,)),
+    //           // Icon( Icons.quiz_rounded, size: 70,color: Color.fromARGB(255, 43, 42, 39), ),
+    //           Container(
+    //             padding: EdgeInsets.all(8),
+    //             decoration: BoxDecoration(
+    //               borderRadius: BorderRadius.circular(10),
+    //               gradient: const LinearGradient(
+    //                 colors: [
+    //                   Color.fromARGB(195, 235, 199, 120),
+    //                   Color.fromARGB(192, 126, 81, 10)
+    //                 ],
+    //               ),
+    //             ),
+    //             margin: EdgeInsets.all(2),
+    //             // color: Color.fromARGB(255, 67, 116, 84),
+    //             child: Text(
+    //               widget.quizName,
+    //               style: TextStyle(
+    //                   decorationColor: Colors.blue[200],
+    //                   fontFamily: 'RobotoMono',
+    //                   fontSize: 25,
+    //                   color: Color.fromARGB(255, 255, 255, 255)),
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ),
+    //   ),
+    // );
   }
 }
+
+
+
+
+
+// for (int i = 1; i < 11; i++) {
+              //         await DatabaseManager().createquestion(
+              //             'Maths',
+              //             'Question $i',
+              //             'option1',
+              //             'Pi',
+              //             'option3',
+              //             'option4',
+              //             'Pi');
+              //       }
